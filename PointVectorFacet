@@ -1,0 +1,53 @@
+class Point:
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+
+class Vector(Point):
+    def __init__(self, x, y, z):
+        super().__init__(x, y, z)
+
+    def __str__(self):
+        return f"x: {self.x}, y: {self.y}, z: {self.z}"
+
+    def normalize(self):
+        abs = (self.x ** 2 + self.y ** 2 + self.z ** 2) ** 0.5
+        self.x = self.x / abs
+        self.y = self.y / abs
+        self.z = self.z / abs
+
+    @staticmethod
+    def cross_product(a, b):
+        return Vector(a.y * b.z - a.z * b.y,
+                      a.z * b.x - a.x * b.z,
+                      a.x * b.y - a.y * b.x)
+
+    @staticmethod
+    def create_vector_verticies(p1, p2):
+        return Vector(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z)
+
+
+class Facet:
+    def __init__(self, v1, v2, v3):
+        self.verticies = [v1, v2, v3]
+        vector1 = Vector.create_vector_verticies(v1, v2)
+        vector2 = Vector.create_vector_verticies(v1, v3)
+        normal = Vector.cross_product(vector1, vector2)
+        normal.normalize()
+        self.normal = normal
+
+
+a1 = Point(2, 3, 4)
+b1 = Point(5, 3, 6)
+c1 = Point(6, 7, 9)
+
+a2 = Point(1, 1, 1)
+b2 = Point(1, 2, 1)
+c2 = Point(2, 1, 1)
+
+polygon1 = Facet(a1, b1, c1)
+polygon2 = Facet(a2, b2, c2)
+print(polygon1.normal)
+print(polygon2.normal)
